@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habari — April Performance Report | 1–29 April 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;font-size:13px;background:#f0f2f5;color:#1a1a1a;padding:20px}
+.page{max-width:1000px;margin:0 auto;background:#fff;box-shadow:0 2px 16px rgba(0,0,0,.12)}
+.hdr{background:linear-gradient(135deg,#0d2b5e,#1b3a6b);padding:20px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr h1{color:#fff;font-size:19px;font-weight:700;letter-spacing:-.3px}
+.hdr p{color:#a0b8d8;font-size:11px;margin-top:3px}
+.hdr .period{color:#fff;font-size:14px;font-weight:700;text-align:right}
+.hdr .sub{color:#a0b8d8;font-size:11px;margin-top:2px;text-align:right}
+.stripe{height:4px;background:linear-gradient(90deg,#00b4d8 0%,#e8a020 50%,#06d6a0 100%)}
+
+/* KPI STRIP */
+.kpi-strip{display:grid;gap:0}
+.kpi-strip.five{grid-template-columns:repeat(5,1fr)}
+.kpi-strip.four{grid-template-columns:repeat(4,1fr)}
+.kpi{padding:13px 14px;text-align:center;border-right:1px solid #e0e6f0;border-bottom:1px solid #e0e6f0}
+.kpi:last-child{border-right:none}
+.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#666;margin-bottom:4px}
+.kv{font-size:24px;font-weight:700;letter-spacing:-1px;line-height:1.1}
+.blue{color:#1b3a6b}.red{color:#cc2200}.green{color:#1a7a1a}.amber{color:#b36b00}.teal{color:#0a7a7a}
+.ks{font-size:10px;color:#888;margin-top:3px}
+
+/* SECTIONS */
+.sec{padding:7px 18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px}
+.sec-blue{background:#1b3a6b;color:#fff}
+.sec-green{background:#1a5c1a;color:#fff}
+.sec-amber{background:#7a4a00;color:#fff}
+.sec-red{background:#8c1a1a;color:#fff}
+.sec-teal{background:#0a5a5a;color:#fff}
+.sec-light{background:#eef2f8;color:#1b3a6b;border-left:4px solid #1b3a6b}
+
+/* TABLES */
+.padded{padding:14px 18px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead tr{background:#1b3a6b}
+th{padding:7px 8px;color:#fff;text-align:center;font-weight:700;font-size:10.5px;border-right:1px solid #2a4f8a}
+th.tl{text-align:left}th:last-child{border-right:none}
+td{padding:6px 8px;text-align:center;border-bottom:1px solid #e8ecf4;border-right:1px solid #e8ecf4}
+td.tl{text-align:left;font-weight:500}td:last-child{border-right:none}
+tr:nth-child(even) td{background:#f7f9fc}tr:nth-child(odd) td{background:#fff}
+.total-row td{background:#dde4f0!important;font-weight:700;border-top:2px solid #1b3a6b}
+.sub-hdr td{background:#eef2f8!important;font-weight:700;color:#1b3a6b;border-top:2px solid #1b3a6b}
+.red-cell{color:#cc2200;font-weight:700}.green-cell{color:#1a7a1a;font-weight:700}.amber-cell{color:#b36b00;font-weight:700}
+
+/* BADGES */
+.badge{display:inline-block;border-radius:10px;padding:2px 7px;font-size:9.5px;font-weight:700}
+.b-red{background:#ffe0dc;color:#8c1a1a}.b-green{background:#dcf0dc;color:#1a5c1a}
+.b-amber{background:#fff0dc;color:#7a4a00}.b-blue{background:#dde8f8;color:#1b3a6b}
+.b-teal{background:#d0f0f0;color:#0a5a5a}
+
+/* CHARTS */
+.chart-row{display:grid;gap:0}
+.c2{grid-template-columns:1fr 1fr}
+.c3{grid-template-columns:1fr 1fr 1fr}
+.chart-col{padding:14px 16px;border-right:1px solid #e0e6f0}
+.chart-col:last-child{border-right:none}
+.chart-col.full{grid-column:1/-1;border-right:none}
+.ctitle{font-size:11px;font-weight:700;color:#1b3a6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+
+.note{font-size:10.5px;color:#888;font-style:italic;padding:5px 18px 8px;border-top:1px solid #e8ecf4}
+.foot{background:#1b3a6b;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.foot span{color:#a0b8d8;font-size:11px}.foot strong{color:#fff}
+.warn-box{background:#fff8e1;border:1px solid #f5a623;border-left:4px solid #f5a623;padding:8px 14px;margin:10px 18px;border-radius:4px;font-size:12px;color:#7a4a00}
+.alert-box{background:#fff0f0;border:1px solid #f05c5c;border-left:4px solid #cc2200;padding:8px 14px;margin:10px 18px;border-radius:4px;font-size:12px;color:#8c1a1a}
+@media print{body{background:#fff;padding:0}.page{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div><h1> April Performance Report</h1><p>· Inbound · Outbound · Ticket Analysis</p></div>
+  <div><div class="period">1 – 29 April 2026</div><div class="sub">Monthly Summary Report · </div></div>
+</div>
+<div class="stripe"></div>
+
+<!-- TOP KPIs -->
+<div class="kpi-strip five">
+  <div class="kpi"><div class="kl">Total Calls (MTD)</div><div class="kv blue">9,955</div><div class="ks">Offered to agents</div></div>
+  <div class="kpi"><div class="kl">Calls Answered</div><div class="kv green">7,500</div><div class="ks">75.3% answer rate</div></div>
+  <div class="kpi"><div class="kl">Abandon Rate</div><div class="kv red">24.7%</div><div class="ks">Target: ≤10%</div></div>
+  <div class="kpi"><div class="kl">Repeat Call Rate</div><div class="kv amber">29.7%</div><div class="ks"></div></div>
+  <div class="kpi"><div class="kl">SLA Achievement</div><div class="kv teal">68.3%</div><div class="ks">Target: ≥80%</div></div>
+</div>
+<div class="kpi-strip four">
+  <div class="kpi"><div class="kl">Total Tickets</div><div class="kv blue">8,023</div><div class="ks">1–30 April 2026</div></div>
+  <div class="kpi"><div class="kl">Resolved</div><div class="kv green">7,412</div><div class="ks">92.4% resolution rate</div></div>
+  <div class="kpi"><div class="kl">Unresolved</div><div class="kv red">611</div><div class="ks">522 beyond SLA</div></div>
+  <div class="kpi"><div class="kl">Repeat Tickets</div><div class="kv amber">30.4%</div><div class="ks">2,436 of 8,023</div></div>
+</div>
+
+<!-- WEEKLY SUMMARY TREND CHART -->
+<div class="sec sec-blue">Weekly Performance Trend — April 2026</div>
+<div class="chart-row c2">
+  <div class="chart-col full">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+      <div style="padding:14px 16px;border-right:1px solid #e0e6f0">
+        <div class="ctitle">Abandon rate & answer rate by week</div>
+        <div style="position:relative;height:200px"><canvas id="weekTrendChart"></canvas></div>
+      </div>
+      <div style="padding:14px 16px">
+        <div class="ctitle">Repeat call % & SLA % by week</div>
+        <div style="position:relative;height:200px"><canvas id="weekKpiChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WEEKLY SUMMARY TABLE -->
+<div class="sec sec-blue">Weekly Summary</div>
+<div class="padded">
+<table>
+  <thead><tr>
+    <th class="tl">Week</th><th>Period</th><th>Total Calls</th><th>Answered</th><th>Abandoned</th>
+    <th>ABD %</th><th>Answer %</th><th>Repeat %</th><th>SLA %</th><th>Trend</th>
+  </tr></thead>
+  <tbody>
+    <tr><td class="tl"><strong>Week 1</strong></td><td>1–5 Apr</td><td colspan="7" style="text-align:center;color:#888;font-style:italic">System data not available for this period</td><td><span class="badge b-blue">New System</span></td></tr>
+    <tr><td class="tl"><strong>Week 2</strong></td><td>6–12 Apr</td><td>2,984</td><td>1,705</td><td>926</td>
+      <td class="red-cell">35.2%</td><td class="red-cell">64.8%</td><td class="red-cell">39.8%</td><td class="red-cell">54.9%</td>
+      <td><span class="badge b-red">High abandons</span></td></tr>
+    <tr><td class="tl"><strong>Week 3</strong></td><td>13–19 Apr</td><td>2,853</td><td>2,148</td><td>515</td>
+      <td class="amber-cell">19.3%</td><td class="amber-cell">80.7%</td><td class="amber-cell">26.3%</td><td class="amber-cell">76.0%</td>
+      <td><span class="badge b-amber">Improving</span></td></tr>
+    <tr><td class="tl"><strong>Week 4</strong></td><td>20–26 Apr</td><td>2,973</td><td>2,282</td><td>446</td>
+      <td class="green-cell">16.3%</td><td class="green-cell">83.7%</td><td class="green-cell">22.2%</td><td class="green-cell">79.3%</td>
+      <td><span class="badge b-green">Best week</span></td></tr>
+    <tr><td class="tl"><strong>Week 5</strong></td><td>27–29 Apr</td><td>2,134</td><td>1,365</td><td>568</td>
+      <td class="red-cell">29.4%</td><td class="amber-cell">70.6%</td><td class="amber-cell">32.7%</td><td class="amber-cell">60.6%</td>
+      <td><span class="badge b-amber">Partial week</span></td></tr>
+    <tr class="total-row"><td class="tl">MTD Total</td><td>1–29 Apr</td><td>9,955</td><td>7,500</td><td>2,455</td>
+      <td class="red-cell">24.7%</td><td class="amber-cell">75.3%</td><td class="amber-cell">29.7%</td><td class="amber-cell">68.3%</td>
+      <td><span class="badge b-amber">Below targets</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- DAILY BREAKDOWN -->
+<div class="sec sec-blue">Daily Breakdown — 8 to 29 April 2026</div>
+<div style="position:relative;height:230px;padding:14px 18px">
+  <canvas id="dailyChart"></canvas>
+</div>
+<div class="padded" style="padding-top:4px">
+<table>
+  <thead><tr>
+    <th class="tl">Date</th><th>Day</th><th>Agents</th><th>Calls</th><th>Answered</th>
+    <th>Abandoned</th><th>ABD%</th><th>Answer%</th><th>Repeat%</th><th>SLA%</th><th>Prod%</th>
+  </tr></thead>
+  <tbody>
+    <tr class="sub-hdr"><td class="tl" colspan="11">📅 Week 2 — 6 to 12 April</td></tr>
+    <tr><td class="tl">8 Apr</td><td>Wed</td><td>15</td><td>980</td><td>564</td><td>416</td><td class="red-cell">33.3%</td><td class="amber-cell">66.7%</td><td class="amber-cell">34.6%</td><td class="red-cell">55.6%</td><td>71.2%</td></tr>
+    <tr><td class="tl">9 Apr</td><td>Thu</td><td>11</td><td>832</td><td>467</td><td>365</td><td class="red-cell">37.2%</td><td class="amber-cell">62.8%</td><td class="red-cell">43.1%</td><td class="red-cell">51.6%</td><td>66.1%</td></tr>
+    <tr><td class="tl">10 Apr</td><td>Fri</td><td>8</td><td>706</td><td>432</td><td>274</td><td class="red-cell">31.0%</td><td class="amber-cell">69.0%</td><td class="amber-cell">35.7%</td><td class="amber-cell">60.2%</td><td>60.6%</td></tr>
+    <tr><td class="tl">11 Apr</td><td>Sat</td><td>5</td><td>466</td><td>242</td><td>224</td><td class="red-cell">41.7%</td><td class="red-cell">58.3%</td><td class="red-cell">52.9%</td><td class="red-cell">51.3%</td><td class="green-cell">84.2%</td></tr>
+    <tr><td class="tl">12 Apr</td><td>Sun</td><td>9</td><td>515</td><td>391</td><td>124</td><td class="amber-cell">20.0%</td><td class="amber-cell">80.0%</td><td class="amber-cell">27.5%</td><td class="amber-cell">74.6%</td><td>68.5%</td></tr>
+    <tr class="total-row"><td class="tl" colspan="2">Wk 2 Total</td><td>—</td><td>2,984</td><td>1,705</td><td>926</td><td class="red-cell">35.2%</td><td class="amber-cell">64.8%</td><td class="red-cell">39.8%</td><td class="red-cell">54.9%</td><td>—</td></tr>
+
+    <tr class="sub-hdr"><td class="tl" colspan="11">📅 Week 3 — 13 to 19 April</td></tr>
+    <tr><td class="tl">13 Apr</td><td>Mon</td><td>8</td><td>542</td><td>403</td><td>139</td><td class="amber-cell">20.8%</td><td class="amber-cell">79.2%</td><td class="amber-cell">33.7%</td><td class="amber-cell">73.1%</td><td>72.4%</td></tr>
+    <tr><td class="tl">14 Apr</td><td>Tue</td><td>9</td><td>394</td><td>292</td><td>102</td><td class="amber-cell">19.6%</td><td class="amber-cell">80.4%</td><td class="amber-cell">27.0%</td><td class="amber-cell">76.6%</td><td>63.8%</td></tr>
+    <tr><td class="tl">15 Apr</td><td>Wed</td><td>6</td><td>385</td><td>266</td><td>119</td><td class="amber-cell">23.8%</td><td class="amber-cell">76.2%</td><td class="amber-cell">33.2%</td><td class="amber-cell">71.9%</td><td>70.9%</td></tr>
+    <tr><td class="tl">16 Apr</td><td>Thu</td><td>8</td><td>399</td><td>330</td><td>69</td><td class="green-cell">10.8%</td><td class="green-cell">89.2%</td><td class="green-cell">13.8%</td><td class="green-cell">84.6%</td><td>65.5%</td></tr>
+    <tr><td class="tl">17 Apr</td><td>Fri</td><td>6</td><td>343</td><td>258</td><td>85</td><td class="amber-cell">20.6%</td><td class="amber-cell">79.4%</td><td class="amber-cell">24.2%</td><td class="amber-cell">76.6%</td><td>64.6%</td></tr>
+    <tr><td class="tl">18 Apr</td><td>Sat</td><td>6</td><td>275</td><td>208</td><td>67</td><td class="amber-cell">19.4%</td><td class="amber-cell">80.6%</td><td class="amber-cell">23.3%</td><td class="amber-cell">76.0%</td><td class="green-cell">85.4%</td></tr>
+    <tr><td class="tl">19 Apr</td><td>Sun</td><td>8</td><td>478</td><td>415</td><td>63</td><td class="green-cell">5.9%</td><td class="green-cell">94.1%</td><td class="green-cell">19.7%</td><td class="green-cell">90.5%</td><td>55.9%</td></tr>
+    <tr class="total-row"><td class="tl" colspan="2">Wk 3 Total</td><td>—</td><td>2,853</td><td>2,148</td><td>515</td><td class="amber-cell">19.3%</td><td class="amber-cell">80.7%</td><td class="amber-cell">26.3%</td><td class="amber-cell">76.0%</td><td>—</td></tr>
+
+    <tr class="sub-hdr"><td class="tl" colspan="11">📅 Week 4 — 20 to 26 April (Best Week)</td></tr>
+    <tr><td class="tl">20 Apr</td><td>Mon</td><td>10</td><td>397</td><td>320</td><td>77</td><td class="amber-cell">12.1%</td><td class="amber-cell">87.9%</td><td class="green-cell">16.5%</td><td class="green-cell">83.8%</td><td>51.2%</td></tr>
+    <tr><td class="tl">21 Apr</td><td>Tue</td><td>9</td><td>484</td><td>369</td><td>115</td><td class="amber-cell">16.9%</td><td class="amber-cell">83.1%</td><td class="amber-cell">20.1%</td><td class="amber-cell">79.1%</td><td>60.0%</td></tr>
+    <tr><td class="tl">22 Apr</td><td>Wed</td><td>9</td><td>422</td><td>312</td><td>110</td><td class="amber-cell">20.6%</td><td class="amber-cell">79.4%</td><td class="amber-cell">27.6%</td><td class="amber-cell">77.4%</td><td>62.6%</td></tr>
+    <tr><td class="tl">23 Apr</td><td>Thu</td><td>7</td><td>459</td><td>335</td><td>124</td><td class="amber-cell">19.3%</td><td class="amber-cell">80.7%</td><td class="amber-cell">24.5%</td><td class="amber-cell">74.7%</td><td>63.7%</td></tr>
+    <tr><td class="tl">24 Apr</td><td>Fri</td><td>7</td><td>327</td><td>254</td><td>73</td><td class="amber-cell">16.2%</td><td class="amber-cell">83.8%</td><td class="amber-cell">23.5%</td><td class="amber-cell">78.2%</td><td>53.2%</td></tr>
+    <tr><td class="tl">25 Apr</td><td>Sat</td><td>6</td><td>406</td><td>277</td><td>129</td><td class="amber-cell">24.7%</td><td class="amber-cell">75.3%</td><td class="amber-cell">24.7%</td><td class="amber-cell">69.8%</td><td class="green-cell">77.2%</td></tr>
+    <tr><td class="tl">26 Apr</td><td>Sun</td><td>8</td><td>512</td><td>370</td><td>142</td><td class="amber-cell">22.3%</td><td class="amber-cell">77.7%</td><td class="amber-cell">28.8%</td><td class="amber-cell">72.3%</td><td>59.2%</td></tr>
+    <tr class="total-row"><td class="tl" colspan="2">Wk 4 Total</td><td>—</td><td>2,973</td><td>2,282</td><td>446</td><td class="green-cell">16.3%</td><td class="green-cell">83.7%</td><td class="green-cell">22.2%</td><td class="green-cell">79.3%</td><td>—</td></tr>
+
+    <tr class="sub-hdr"><td class="tl" colspan="11">📅 Week 5 — 27 to 29 April (Partial)</td></tr>
+    <tr><td class="tl">27 Apr</td><td>Mon</td><td>8</td><td>542</td><td>356</td><td>186</td><td class="red-cell">25.5%</td><td class="amber-cell">74.5%</td><td class="amber-cell">25.5%</td><td class="amber-cell">67.8%</td><td>50.3%</td></tr>
+    <tr><td class="tl">28 Apr</td><td>Tue</td><td>7</td><td>1,080</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+    <tr><td class="tl">29 Apr</td><td>Wed</td><td>7</td><td>979</td><td>639</td><td>340</td><td class="red-cell">34.7%</td><td class="amber-cell">65.3%</td><td class="amber-cell">38.5%</td><td class="red-cell">51.5%</td><td>67.9%</td></tr>
+    <tr class="total-row"><td class="tl" colspan="2">MTD TOTAL</td><td>~8</td><td>9,955</td><td>7,500</td><td>2,455</td><td class="red-cell">24.7%</td><td class="amber-cell">75.3%</td><td class="amber-cell">29.7%</td><td class="amber-cell">68.3%</td><td>65.1%</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="note">★ Best day: 19 April — 94.1% answer rate · 5.9% abandon · 19.7% repeat · 90.5% SLA | Worst day: 11 April — 41.7% abandon rate · 52.9% repeat · only 5 agents</div>
+
+<!-- TICKET ANALYSIS -->
+<div class="sec sec-teal">Ticket Analysis — 1 to 30 April 2026</div>
+<div class="kpi-strip four" style="border-top:none">
+  <div class="kpi"><div class="kl">Tickets Created</div><div class="kv blue">8,023</div><div class="ks">Full month</div></div>
+  <div class="kpi"><div class="kl">Resolution Rate</div><div class="kv green">92.4%</div><div class="ks">7,412 resolved</div></div>
+  <div class="kpi"><div class="kl">SLA Compliance</div><div class="kv amber">77%</div><div class="ks">23% past SLA</div></div>
+  <div class="kpi"><div class="kl">Avg Resolution</div><div class="kv teal">26.9hrs</div><div class="ks">Per ticket</div></div>
+</div>
+
+<div class="chart-row c2">
+  <div class="chart-col">
+    <div class="ctitle">Tickets by category (top 6)</div>
+    <div style="position:relative;height:210px"><canvas id="ticketCatChart"></canvas></div>
+  </div>
+  <div class="chart-col">
+    <div class="ctitle">Tickets by region</div>
+    <div style="position:relative;height:210px"><canvas id="regionChart"></canvas></div>
+  </div>
+</div>
+
+<!-- TICKET CREATOR TABLE -->
+<div class="sec sec-teal">Ticket Creators — Resolution Status</div>
+<div class="padded">
+<table>
+  <thead><tr><th class="tl">Creator</th><th>Total</th><th>Resolved</th><th>Unresolved</th><th>Resolution %</th><th>Beyond SLA</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td class="tl">Nayla Hamis</td><td>1,337</td><td class="green-cell">1,312</td><td>25</td><td class="green-cell">98.1%</td><td>2</td><td><span class="badge b-green">Excellent</span></td></tr>
+    <tr><td class="tl">Agatha Tobia Ernest</td><td>1,260</td><td class="green-cell">1,229</td><td>31</td><td class="green-cell">97.5%</td><td>1</td><td><span class="badge b-green">Excellent</span></td></tr>
+    <tr><td class="tl">Glory Vengei</td><td>995</td><td class="green-cell">969</td><td>26</td><td class="green-cell">97.4%</td><td>3</td><td><span class="badge b-green">Strong</span></td></tr>
+    <tr><td class="tl">Olais Philipo Mollel</td><td>898</td><td class="green-cell">877</td><td>21</td><td class="green-cell">97.7%</td><td>4</td><td><span class="badge b-green">Strong</span></td></tr>
+    <tr><td class="tl"><strong>Glory Eliud Michael</strong></td><td>683</td><td class="amber-cell">550</td><td class="red-cell"><strong>133</strong></td><td class="red-cell">80.5%</td><td class="red-cell"><strong>121</strong></td><td><span class="badge b-red">Critical</span></td></tr>
+    <tr><td class="tl">Rosemary Mamiro</td><td>502</td><td class="green-cell">493</td><td>9</td><td class="green-cell">98.2%</td><td>0</td><td><span class="badge b-green">Excellent</span></td></tr>
+    <tr><td class="tl">Enos Mussa</td><td>318</td><td class="green-cell">313</td><td>5</td><td class="green-cell">98.4%</td><td>6</td><td><span class="badge b-green">Good</span></td></tr>
+    <tr><td class="tl">Cst Intern (Irene)</td><td>237</td><td>228</td><td>9</td><td class="amber-cell">96.2%</td><td>2</td><td><span class="badge b-amber">Monitor</span></td></tr>
+    <tr><td class="tl">Zubeda Hamza</td><td>207</td><td>201</td><td>6</td><td class="amber-cell">97.1%</td><td>0</td><td><span class="badge b-amber">Good</span></td></tr>
+    <tr><td class="tl">James Kaaya</td><td>164</td><td>158</td><td>6</td><td class="amber-cell">96.3%</td><td>1</td><td><span class="badge b-amber">Good</span></td></tr>
+    <tr><td class="tl"><strong>Eldard Edward Moyo</strong></td><td>65</td><td class="amber-cell">28</td><td class="red-cell"><strong>37</strong></td><td class="red-cell">43.1%</td><td class="red-cell">—</td><td><span class="badge b-red">Urgent</span></td></tr>
+    <tr><td class="tl"><strong>Winnifrida J. Thomas</strong></td><td>63</td><td class="red-cell">17</td><td class="red-cell"><strong>46</strong></td><td class="red-cell">27.0%</td><td class="red-cell">—</td><td><span class="badge b-red">Urgent</span></td></tr>
+    <tr><td class="tl"><strong>Simon Raphael Mhina</strong></td><td>52</td><td class="red-cell">12</td><td class="red-cell"><strong>40</strong></td><td class="red-cell">23.1%</td><td class="red-cell">—</td><td><span class="badge b-red">Urgent</span></td></tr>
+    <tr class="total-row"><td class="tl">TOTAL</td><td>8,023</td><td class="green-cell">7,412</td><td class="red-cell">611</td><td class="amber-cell">92.4%</td><td class="red-cell">522</td><td><span class="badge b-red">Needs review</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- SLA TABLE -->
+<div class="sec sec-teal">SLA Performance by Sub-Category</div>
+<div class="chart-row c2">
+  <div class="chart-col">
+    <div class="ctitle">SLA compliance by sub-category (worst)</div>
+    <div style="position:relative;height:220px"><canvas id="slaChart"></canvas></div>
+  </div>
+  <div class="chart-col">
+    <div style="margin-top:4px">
+    <table>
+      <thead><tr><th class="tl">Sub-Category</th><th>Tickets</th><th>Within SLA</th><th>Past SLA</th><th>Avg Hrs</th></tr></thead>
+      <tbody>
+        <tr><td class="tl">Payment confirmation</td><td>2,459</td><td class="green-cell">96%</td><td>4%</td><td>6</td></tr>
+        <tr><td class="tl">Mobile Money Payment</td><td>241</td><td class="green-cell">99%</td><td>1%</td><td>1</td></tr>
+        <tr><td class="tl">Password Change</td><td>562</td><td class="green-cell">87%</td><td>13%</td><td>17</td></tr>
+        <tr><td class="tl">Network Downtime</td><td>544</td><td class="amber-cell">84%</td><td>16%</td><td>17</td></tr>
+        <tr><td class="tl">System Fault</td><td>705</td><td class="amber-cell">78%</td><td>22%</td><td>22</td></tr>
+        <tr><td class="tl">Faulty Equipment</td><td>645</td><td class="amber-cell">79%</td><td>21%</td><td>20</td></tr>
+        <tr><td class="tl">Fiber cut/LOS Red</td><td>279</td><td class="amber-cell">52%</td><td class="red-cell">48%</td><td>33</td></tr>
+        <tr><td class="tl">Invoice/Proforma</td><td>182</td><td class="amber-cell">49%</td><td class="red-cell">51%</td><td>39</td></tr>
+        <tr><td class="tl">Signal Optimization</td><td>259</td><td class="red-cell">37%</td><td class="red-cell">63%</td><td>68</td></tr>
+        <tr><td class="tl">LAN Issue</td><td>95</td><td class="red-cell">37%</td><td class="red-cell">63%</td><td>80</td></tr>
+        <tr><td class="tl">Refunded</td><td>101</td><td class="amber-cell">54%</td><td class="red-cell">46%</td><td>117</td></tr>
+        <tr class="total-row"><td class="tl">Overall</td><td>7,617</td><td class="amber-cell">77%</td><td class="amber-cell">23%</td><td>27</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- DEPT HANDLING TIME -->
+<div class="sec sec-teal">Avg Ticket Handling Time by Department</div>
+<div class="padded">
+<table>
+  <thead><tr><th class="tl">Department</th><th>Avg Time (Hrs)</th><th>Assessment</th><th>Action Required</th></tr></thead>
+  <tbody>
+    <tr><td class="tl">Network Planning & NOC</td><td class="green-cell">4 hrs</td><td><span class="badge b-green">Fastest</span></td><td>Maintain</td></tr>
+    <tr><td class="tl">Finance</td><td class="green-cell">6 hrs</td><td><span class="badge b-green">Excellent</span></td><td>Maintain</td></tr>
+    <tr><td class="tl">Customer Success</td><td class="green-cell">15 hrs</td><td><span class="badge b-green">Good</span></td><td>Minor improvements</td></tr>
+    <tr><td class="tl">Enterprise Delivery & Retention</td><td class="amber-cell">42 hrs</td><td><span class="badge b-amber">Slow</span></td><td>Review escalation process</td></tr>
+    <tr><td class="tl">IT</td><td class="amber-cell">33 hrs</td><td><span class="badge b-amber">Monitor</span></td><td>SLA adherence needed</td></tr>
+    <tr><td class="tl">Implementation & Operations</td><td class="red-cell">65 hrs</td><td><span class="badge b-red">Critical</span></td><td>Urgent review required</td></tr>
+    <tr><td class="tl">Sales & Marketing</td><td class="red-cell">181 hrs</td><td><span class="badge b-red">Worst dept</span></td><td>Immediate escalation</td></tr>
+    <tr class="total-row"><td class="tl">Company Average</td><td class="amber-cell">23 hrs</td><td colspan="2">Target: ≤12 hrs for critical categories</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- KEY OBSERVATIONS -->
+<div class="alert-box">🚨 <strong>Critical:</strong> Glory Eliud Michael has <strong>121 unresolved tickets beyond SLA</strong>. Simon Raphael Mhina has only resolved 12 of 52 tickets (23%). Winnifrida J. Thomas has resolved only 17 of 63 (27%). These three require immediate management intervention.</div>
+<div class="warn-box">⚠️ <strong>Ongoing concern:</strong> Payment issues account for <strong>40.6% of all tickets</strong> (3,257) with a 34.7% repeat rate. This is a systemic problem that requires a permanent fix, not just ticket resolution.</div>
+
+<div class="sec sec-light">Key Observations & Recommendations</div>
+<div class="padded">
+<table>
+  <thead><tr><th class="tl" style="width:22%">Area</th><th class="tl">Observation</th><th style="width:16%">Priority</th></tr></thead>
+  <tbody>
+    <tr><td class="tl"><strong>19 Apr — Best Day</strong></td><td class="tl">94.1% answer rate, 5.9% abandon, 90.5% SLA, 19.7% repeat — the only day all targets were met simultaneously. 8 agents, Sunday. Shows full potential when well staffed.</td><td><span class="badge b-green">Benchmark</span></td></tr>
+    <tr><td class="tl"><strong>11 Apr — Worst Day</strong></td><td class="tl">41.7% abandon, 52.9% repeat, 58.3% answer rate. Only 5 agents on a Saturday. Every metric hit worst of month. Staffing gap is the direct cause.</td><td><span class="badge b-red">Urgent fix</span></td></tr>
+    <tr><td class="tl"><strong>Week 4 improvement</strong></td><td class="tl">Best week of the month: 83.7% answer rate, 22.2% repeat, 16.3% abandon. Proves team can perform when at full strength. Target is to sustain this every week.</td><td><span class="badge b-green">Positive</span></td></tr>
+    <tr><td class="tl"><strong>Repeat calls: 29.7%</strong></td><td class="tl">Significant improvement from 66% in March. Payment issues (34.7% repeat) and No Internet (34.1% repeat) are the top drivers. First call resolution must improve.</td><td><span class="badge b-amber">Monitor</span></td></tr>
+    <tr><td class="tl"><strong>Sales & Marketing dept</strong></td><td class="tl">181hrs average ticket handling time — more than 7 days per ticket. This is unacceptable and is directly contributing to repeat tickets and customer dissatisfaction.</td><td><span class="badge b-red">Escalate</span></td></tr>
+    <tr><td class="tl"><strong>Nayla — top ticket creator</strong></td><td class="tl">1,337 tickets raised with 98.1% resolution rate and only 2 tickets beyond SLA. Sets the standard for ticket quality alongside Agatha (97.5%) and Mamiro (98.2%).</td><td><span class="badge b-green">Recognise</span></td></tr>
+    <tr><td class="tl"><strong>SLA 77% — below target</strong></td><td class="tl">Signal Optimization (63% past SLA, 68hrs avg) and LAN Issues (63% past SLA, 80hrs avg) are the biggest SLA failures. Both are technical issues requiring NOC/IT priority escalation.</td><td><span class="badge b-red">Escalate</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="foot">
+  <span> · <strong>April Monthly Report</strong> · </span>
+  <span>1 – 29 April 2026 · </span>
+</div>
+</div>
+
+<script>
+Chart.defaults.font.family='Arial,sans-serif';Chart.defaults.font.size=11;Chart.defaults.color='#555';
+
+const wkLabels=['W2 (6-12 Apr)','W3 (13-19 Apr)','W4 (20-26 Apr)','W5 (27-29 Apr)'];
+
+new Chart(document.getElementById('weekTrendChart'),{type:'line',data:{labels:wkLabels,datasets:[
+  {label:'Abandon %',data:[35.2,19.3,16.3,29.4],borderColor:'#cc2200',backgroundColor:'rgba(204,34,0,.08)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:'#cc2200',borderWidth:2.5},
+  {label:'Answer %',data:[64.8,80.7,83.7,70.6],borderColor:'#1a7a1a',backgroundColor:'rgba(26,122,26,.06)',fill:true,tension:.3,pointRadius:5,pointBackgroundColor:'#1a7a1a',borderWidth:2.5},
+  {label:'Target ABD 10%',data:[10,10,10,10],borderColor:'#1b3a6b',borderDash:[5,4],borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'},
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:11,padding:10,font:{size:10}}},tooltip:{backgroundColor:'#1b3a6b',callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'%'}}},scales:{x:{grid:{color:'#e8ecf4'},ticks:{font:{size:10}}},y:{grid:{color:'#e8ecf4'},ticks:{callback:v=>v+'%'}}}}});
+
+new Chart(document.getElementById('weekKpiChart'),{type:'bar',data:{labels:wkLabels,datasets:[
+  {label:'Repeat %',data:[39.8,26.3,22.2,32.7],backgroundColor:'rgba(179,107,0,.7)',borderColor:'#b36b00',borderWidth:1,borderRadius:3},
+  {label:'SLA %',data:[54.9,76.0,79.3,60.6],backgroundColor:'rgba(10,90,90,.65)',borderColor:'#0a5a5a',borderWidth:1,borderRadius:3},
+  {label:'SLA Target 80%',data:[80,80,80,80],type:'line',borderColor:'#1a7a1a',borderDash:[5,4],borderWidth:1.5,pointRadius:0,backgroundColor:'transparent'},
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:11,padding:10,font:{size:10}}},tooltip:{backgroundColor:'#1b3a6b',callbacks:{label:c=>c.dataset.label+': '+c.parsed.y+'%'}}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#e8ecf4'},ticks:{callback:v=>v+'%'}}}}});
+
+const dates=['8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29'];
+const abd=[33.3,37.2,31.0,41.7,20.0,20.8,19.6,23.8,10.8,20.6,19.4,5.9,12.1,16.9,20.6,19.3,16.2,24.7,22.3,25.5,null,34.7];
+const rep=[34.6,43.1,35.7,52.9,27.5,33.7,27.0,33.2,13.8,24.2,23.3,19.7,16.5,20.1,27.6,24.5,23.5,24.7,28.8,25.5,null,38.5];
+const abdColor=abd.map(v=>v===null?'rgba(180,180,180,0.3)':v>=35?'rgba(204,34,0,0.75)':v>=20?'rgba(179,107,0,0.7)':'rgba(26,122,26,0.7)');
+
+new Chart(document.getElementById('dailyChart'),{type:'bar',data:{labels:dates.map(d=>d+' Apr'),datasets:[
+  {label:'Abandon %',data:abd,backgroundColor:abdColor,borderRadius:3,yAxisID:'y',type:'bar'},
+  {label:'Repeat %',data:rep,borderColor:'#1b3a6b',backgroundColor:'transparent',type:'line',tension:.3,pointRadius:3,pointBackgroundColor:'#1b3a6b',borderWidth:2,spanGaps:false,yAxisID:'y'},
+  {label:'Target 10%',data:Array(22).fill(10),type:'line',borderColor:'#1a7a1a',borderDash:[5,3],borderWidth:1.5,pointRadius:0,backgroundColor:'transparent',yAxisID:'y'},
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:11,padding:10,font:{size:10.5}}},tooltip:{backgroundColor:'#1b3a6b',callbacks:{label:c=>c.parsed.y!==null?c.dataset.label+': '+c.parsed.y+'%':'No data'}}},scales:{x:{grid:{display:false},ticks:{font:{size:9.5}}},y:{grid:{color:'#e8ecf4'},ticks:{callback:v=>v+'%'},max:60,title:{display:true,text:'%',font:{size:10}}}}}});
+
+new Chart(document.getElementById('ticketCatChart'),{type:'doughnut',data:{labels:['Payment (3,257)','No Internet (2,248)','Slow Internet (833)','Service Request (794)','On & Off (205)','Other (686)'],datasets:[{data:[3257,2248,833,794,205,686],backgroundColor:['#1b3a6b','#cc2200','#b36b00','#1a7a1a','#0a7a7a','#888'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:11,font:{size:10},padding:8}},tooltip:{backgroundColor:'#1b3a6b'}}}});
+
+new Chart(document.getElementById('regionChart'),{type:'bar',data:{labels:['Arusha','Moshi','Mwanza','Dodoma','Other','Shinyanga','Morogoro'],datasets:[{label:'Tickets',data:[3066,1071,1020,908,652,479,335],backgroundColor:['#1b3a6b','#1b5a6b','#1b6b4a','#4a6b1b','#888','#6b4a1b','#6b1b1b'],borderRadius:3,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1b3a6b'}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{grid:{color:'#e8ecf4'}}}}});
+
+new Chart(document.getElementById('slaChart'),{type:'bar',data:{labels:['Payment\nConfirm','Password\nChange','Network\nDowntime','Fiber/LOS','Invoice','Signal\nOptim.','LAN\nIssue'],datasets:[
+  {label:'Within SLA %',data:[96,87,84,52,49,37,37],backgroundColor:'rgba(26,122,26,.7)',borderRadius:3},
+  {label:'Past SLA %',data:[4,13,16,48,51,63,63],backgroundColor:'rgba(204,34,0,.7)',borderRadius:3},
+]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'top',labels:{boxWidth:11,font:{size:10}}},tooltip:{backgroundColor:'#1b3a6b',callbacks:{label:c=>c.dataset.label+': '+c.parsed.x+'%'}}},scales:{x:{stacked:false,grid:{color:'#e8ecf4'},ticks:{callback:v=>v+'%'},max:110},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+</script>
+</body>
+</html>
